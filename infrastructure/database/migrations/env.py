@@ -31,15 +31,24 @@ from backend.app.infrastructure.config import get_settings
 from backend.app.infrastructure.database.base import Base
 from backend.app.infrastructure.database.session import get_engine
 
+# Importing this package registers every ORM model's table with
+# Base.metadata as a side effect (see backend/app/infrastructure/database/
+# models/__init__.py's own docstring). Required here so `target_metadata`
+# below actually reflects PHASE-1.1's users/workspaces/projects tables —
+# without this import, Base.metadata would stay empty regardless of how
+# many model modules exist elsewhere in the codebase, and autogenerate
+# would (incorrectly) propose dropping all three tables.
+from backend.app.infrastructure.database import models  # noqa: F401
+
 # Alembic Config object, providing access to values in alembic.ini.
 config = context.config
 
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
-# Target metadata for 'autogenerate' support. At PHASE-0 this is empty
-# (Base has no domain models registered yet) — autogenerate will correctly
-# produce no-op diffs until a later phase defines entities.
+# Target metadata for 'autogenerate' support. As of PHASE-1.1 this
+# reflects the three core domain tables (users, workspaces, projects);
+# it was empty through PHASE-0 (Base had no domain models registered yet).
 target_metadata = Base.metadata
 
 
