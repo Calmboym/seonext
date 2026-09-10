@@ -1,0 +1,224 @@
+name: CI
+
+# Implements docs/20_PROJECT_STRUCTURE.md §61's stage order:
+#   Formatting -> Linting -> Type Checking -> Unit Tests -> Integration
+#   Tests -> Contract Tests -> AI Evaluation -> Security Tests -> Build
+#   -> E2E
+# as ten sequential jobs (`needs:` chains them), so a fast deterministic
+# check (formatting) fails before a slow one (build) ever runs — §61's
+# "fast deterministic checks should fail early."
+#
+# AI Evaluation and E2E are explicit no-op jobs, not omitted or silently
+# skipped — see their own comments below for exactly why nothing is
+# runnable there yet. This is a documented reordering-in-content, not a
+# reordering-in-sequence: all ten stages exist, in the doc's order; two
+# have nothing to execute yet.
+#
+# NOTE (PHASE-0.8, session 7): this workflow has never actually been run
+# by GitHub Actions — this repository was assembled and pushed from a
+# sandbox with no network access, so nothing here has executed against a
+# real GitHub Actions runner. It is written directly against the already-
+# declared pyproject.toml/package.json scripts (`ruff format --check`,
+# `pytest`, `npm run lint`, etc.), each already confirmed syntactically
+# valid, but the workflow YAML itself and its actual behavior on a real
+# runner are UNVERIFIED — see .ai/PROJECT_STATE.md Risk R9. What *is*
+# genuinely verified: backend/tests/unit/test_error_hierarchy.py (the one
+# test with zero third-party dependencies) was actually executed in this
+# session's sandbox, including a deliberately-broken-build round trip —
+# see that file's own docstring and .ai/PROJECT_STATE.md §14.
+
+on:
+  push:
+  pull_request:
+
+env:
+  PYTHON_VERSION: "3.11"
+  NODE_VERSION: "20"
+
+jobs:
+  formatting:
+    name: Formatting
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      - run: pip install -e ".[dev]"
+      - name: ruff format --check (backend)
+        run: ruff format --check backend/ apps/api/ infrastructure/
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+      - run: npm install
+      - name: prettier --check (apps/web)
+        run: npm run format:check --workspace=apps/web
+
+  linting:
+    name: Linting
+    needs: formatting
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      - run: pip install -e ".[dev]"
+      - name: ruff check (backend)
+        run: ruff check backend/ apps/api/ infrastructure/
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+      - run: npm install
+      - name: eslint (apps/web)
+        run: npm run lint --workspace=apps/web
+
+  type-checking:
+    name: Type Checking
+    needs: linting
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      - run: pip install -e ".[dev]"
+      - name: mypy (backend)
+        run: mypy backend/app
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+      - run: npm install
+      - name: tsc --noEmit (apps/web)
+        run: npm run typecheck --workspace=apps/web
+
+  unit-tests:
+    name: Unit Tests
+    needs: type-checking
+    runs-on: ubuntu-latest
+    env:
+      # Dummy values so Settings() can construct without a real database
+      # or a production secret. No live Postgres is started for this job
+      # — nothing in backend/tests/unit/ touches a database (that's what
+      # integration-tests is for).
+      DATABASE_URL: "postgresql+asyncpg://test:test@localhost/test"
+      SECRET_KEY: "ci-only-secret-key-do-not-use-in-production"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      - run: pip install -e ".[dev]"
+      - name: pytest backend/tests/unit
+        run: pytest backend/tests/unit -v
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+      - run: npm install
+      - name: vitest (apps/web)
+        run: npm run test --workspace=apps/web
+
+  integration-tests:
+    name: Integration Tests
+    needs: unit-tests
+    runs-on: ubuntu-latest
+    env:
+      # Same as unit-tests: backend/tests/api/'s TestClient exercises the
+      # app in-process over HTTP, but the only routes that exist
+      # (/api/v1/health, /metrics) don't touch the database either. A
+      # `services: postgres:` block belongs here once a domain endpoint
+      # actually queries one.
+      DATABASE_URL: "postgresql+asyncpg://test:test@localhost/test"
+      SECRET_KEY: "ci-only-secret-key-do-not-use-in-production"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      - run: pip install -e ".[dev]"
+      - name: pytest backend/tests/api
+        run: pytest backend/tests/api -v
+
+  contract-tests:
+    name: Contract Tests
+    needs: integration-tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      - run: pip install -e ".[dev]"
+      - name: pytest backend/tests/contract
+        run: pytest backend/tests/contract -v
+
+  ai-evaluation:
+    name: AI Evaluation
+    needs: contract-tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: no-op — no AI runtime exists yet
+        run: |
+          echo "Skipped: no AI runtime, agent, or golden dataset exists yet"
+          echo "(backend/app/intelligence/, backend/app/orchestration/, and"
+          echo "tests/golden/ are all empty placeholders — see their own"
+          echo "README.md / __init__.py). This stage exists in this"
+          echo "pipeline per docs/20_PROJECT_STRUCTURE.md §61's order and"
+          echo "will run real evaluations once there is something to"
+          echo "evaluate."
+
+  security-tests:
+    name: Security Tests
+    needs: ai-evaluation
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      - run: pip install -e ".[dev]"
+      - name: bandit (backend/app, with emphasis on the new security/ module)
+        run: bandit -r backend/app -ll
+
+  build:
+    name: Build
+    needs: security-tests
+    runs-on: ubuntu-latest
+    env:
+      DATABASE_URL: "postgresql+asyncpg://test:test@localhost/test"
+      SECRET_KEY: "ci-only-secret-key-do-not-use-in-production"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      - name: pip install (backend) — proves the package installs cleanly
+        run: pip install -e ".[dev]"
+      - name: import smoke test — proves the app assembles end-to-end
+        run: python -c "from backend.app.main import app; print('created FastAPI app:', app.title)"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+      - run: npm install
+      - name: next build (apps/web)
+        run: npm run build --workspace=apps/web
+
+  e2e:
+    name: E2E
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: no-op — not reachable at foundation level yet
+        run: |
+          echo "Skipped: end-to-end testing needs a deployed frontend +"
+          echo "backend + database running together and browser-automation"
+          echo "tooling (e.g. Playwright), none of which exist yet at"
+          echo "PHASE-0. .ai/WBS.md §4's PHASE-0.8 Expected Output names"
+          echo "exactly three test categories to actually populate"
+          echo "(backend-unit, frontend-unit, API-integration) —"
+          echo "basic E2E is listed in docs/22_TESTING_AND_VALIDATION.md"
+          echo "§120's mandatory set but is not scoped as 'reachable at"
+          echo "foundation level' by that same WBS entry. This stage"
+          echo "exists in this pipeline per docs/20_PROJECT_STRUCTURE.md"
+          echo "§61's order and will run real E2E once there is a"
+          echo "deployed environment and at least one user journey to test."

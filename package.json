@@ -1,0 +1,14 @@
+{
+  "name": "seonex",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Seonex — SEO Research & Strategy Copilot / SEO Decision Engine (monorepo root). See docs/20_PROJECT_STRUCTURE.md §3-4.",
+  "workspaces": [
+    "apps/web",
+    "packages/ui"
+  ],
+  "scripts": {
+    "dev": "npm run dev --workspace=apps/web",
+    "build": "npm run build --workspace=apps/web"
+  }
+}

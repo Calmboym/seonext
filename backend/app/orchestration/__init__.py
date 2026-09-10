@@ -1,0 +1,1 @@
+"""Orchestration layer: workflow planning, capability selection, task dependencies, agent execution, retries, timeouts, human review, workflow state, execution budgets. Must not become the owner of every domain rule. See docs/07_TECHNICAL_ARCHITECTURE.md §10. No workflow engine exists yet — populated in a later phase once orchestration is in scope."""

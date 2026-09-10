@@ -1,0 +1,375 @@
+# WBS.md — Work Breakdown Structure
+
+Answers "what must be built and what depends on what." For "what are we doing right now," see `.ai/TASK_BOARD.md`. For "where does the project stand," see `.ai/PROJECT_STATE.md`. Do not duplicate this file's content into those — reference it.
+
+---
+
+## 1. Persisted Document Dependency Graph
+
+### 1a. Reading Order (context-loading sequence)
+
+Confirmed against actual document content during `BOOTSTRAP-001` (not assumed from numbering). Matches the baseline in `24_INDEX_ROADMAP_TASKS_DEPENDENCIES.md` § 8; no evidence surfaced during the audit that contradicts it.
+
+```text
+01 PRD → 02 Product Vision → 03 Master Rules → 04 System Architecture
+    ├──→ 05 AI Agent Architecture ─┐
+    ├──→ 06 Data Architecture ─────┼──→ 07 Technical Architecture
+    └──────────────────────────────┘
+→ 08 SEO Knowledge Model → 09 Entity/EAV → 10 Topic Modeling → 11 Search/SERP
+→ 12 Decision Engine → 13 Agent Specifications → 14 Agent Workflow
+→ 15 Human-in-the-Loop → 16 Output Contracts
+→ 17 UI/UX Spec → 18 Frontend Architecture → 19 Design System → 20 Project Structure
+→ 21 Development & Debug → 22 Testing & Validation → 23 Project Control Center
+→ 24 Index/Roadmap/Tasks/Dependencies
+    ├──→ 25 Context Management
+    └──→ 26 Skills & Tooling Policy
+```
+
+### 1b. Authority Order
+
+Canonical and defined exactly once, in `03_MASTER_RULES.md` § 2 — consolidated there during this bootstrap (Q1). Do not restate it in this file or any other; reference it. Reading order and authority order are **not the same thing** — e.g. the PRD is read first, but Master Rules outranks it in a dispute.
+
+### 1c. Known Deviations in Per-Document Dependency Metadata (not fixed — deferred, Q4)
+
+- Docs `07` and `08` declare *cumulative* (transitive) "Depends On" lists; docs `09`, `10`, `11` declare *direct* dependencies only. Both conventions coexist in the corpus.
+- `13_AGENT_SPECIFICATIONS.md` declares dependencies on `03, 04, 05, 06, 08` only, omitting `09, 10, 11, 12` despite specifying agents (Topic Clustering, SERP Intelligence, Cannibalization) whose logic is defined there.
+- Tracked as `DOCS-MAINT-001` (§ 6 below), not corrected in this bootstrap.
+
+## 2. Task Hierarchy
+
+```
+PROJECT: Seonex
+ └─ PHASE: Documentation Bootstrap
+     └─ MILESTONE: Bootstrap & Control System Initialization
+         ├─ BOOTSTRAP-001 — Documentation Audit & Control System Init      [DONE]
+         │   ├─ 1a. Produce bootstrap audit                                [DONE]
+         │   ├─ 1b. Apply approved documentation repairs (Q1,Q2,Q3,Q5,Q6,Q7)[DONE]
+         │   ├─ 1c. Build & persist dependency graph                      [DONE — § 1 above]
+         │   ├─ 1d. Create PROJECT_STATE.md / WBS.md / TASK_BOARD.md      [DONE]
+         │   ├─ 1e. Create COMPONENT_MATRIX.md / OWNERSHIP.md             [DONE]
+         │   ├─ 1f. Create SESSION_PROMPT.md                              [DONE]
+         │   └─ 1g. Establish state; identify (not authorize) first READY [DONE]
+         │
+         └─ BOOTSTRAP-002 — Foundation Component System                              [DONE — 2.1–2.6 all AUTHORIZED & DONE, zero open exceptions (Dashboard resolved, see PROJECT_STATE.md Q11)]
+             ├─ BOOTSTRAP-002.1 Derive Foundation component inventory (19 §§33–49)     [DONE]
+             ├─ BOOTSTRAP-002.2 Derive Shared component inventory (17 §66, 19 §§45–49) [DONE]
+             ├─ BOOTSTRAP-002.3 Derive Feature component inventory per workspace       [DONE]
+             ├─ BOOTSTRAP-002.4 Populate Component Registry fields                     [DONE]
+             ├─ BOOTSTRAP-002.5 Finalize per-component Ownership mapping               [DONE — Dashboard ownership resolved by human decision, see PROJECT_STATE.md Q11]
+             └─ BOOTSTRAP-002.6 Define component testing requirements (refs 22)        [DONE]
+
+ └─ PHASE 0 (`PHASE-0`) — Foundation          [DONE — all 8 subtasks executed across sessions 6-7]
+     ├─ PHASE-0.1 Repository Bootstrap & Control-System Persistence (20 §§3-4,62; 23 §1) [DONE — IMPLEMENTED/UNVERIFIED]
+     ├─ PHASE-0.2 Environment & Configuration Foundation (07 §§57-59; 20 §59)            [DONE — IMPLEMENTED/UNVERIFIED]
+     ├─ PHASE-0.3 Database Foundation & Migrations (07 §§26-30; 20 §29)                  [DONE — IMPLEMENTED/UNVERIFIED; see Risk R9]
+     ├─ PHASE-0.4 API Foundation (07 §§15-20; 20 §7)                                      [DONE — IMPLEMENTED/UNVERIFIED; see Risk R9]
+     ├─ PHASE-0.5 Authentication Foundation (07 §§53-56) — see Obs. #1 below              [DONE — IMPLEMENTED/UNVERIFIED]
+     ├─ PHASE-0.6 Frontend Foundation (07 §3; 20 §§25-27, §32)                            [DONE — IMPLEMENTED/UNVERIFIED]
+     ├─ PHASE-0.7 Observability Foundation (20 §24; 07 §3)                                [DONE — IMPLEMENTED/UNVERIFIED]
+     └─ PHASE-0.8 Testing Foundation & CI (22 §120; 20 §§33,61)                           [DONE — IMPLEMENTED/PARTIALLY_VERIFIED; one test genuinely RUNTIME_VERIFIED]
+
+ └─ PHASE 1 (`PHASE-1`) — Core Platform      [DECOMPOSED — 8 subtasks planned, session 8; none authorized/executed]
+     ├─ PHASE-1.1 Core Domain Model & Persistence — User/Workspace/Project (06 §§5-8; 20 §§29-30) [READY — see Obs. #6]
+     ├─ PHASE-1.2 Authentication: Real User Binding (07 §53)                                       [BACKLOG]
+     ├─ PHASE-1.3 Authorization Foundation — User/Workspace/Project level (07 §§54-56)              [BACKLOG]
+     ├─ PHASE-1.4 API Contract Layer — Auth & Projects (16 §§4-12; 20 §§16,32)                      [BACKLOG]
+     ├─ PHASE-1.5 Project Lifecycle — Creation & Settings (24 §18 Exit Criteria)                    [BACKLOG]
+     ├─ PHASE-1.6 Dashboard Shell — Project Overview (17 §10)                — see Obs. #7          [BACKLOG]
+     ├─ PHASE-1.7 Basic AI Runtime Foundation (07 §§41-46; 20 §19)          — see Obs. #8           [READY]
+     └─ PHASE-1.8 Context Foundation — Scaffold (25 §8; 20 §15)                                     [BACKLOG]
+ └─ PHASE 2 — SEO Knowledge Foundation      [PLANNED]
+ └─ PHASE 3 — Search & Topic Intelligence  [PLANNED]
+ └─ PHASE 4 — Decision Intelligence         [PLANNED]
+ └─ PHASE 5 — AI Workflow & Human Control  [PLANNED]
+ └─ PHASE 6 — SEO Planning & Architecture  [PLANNED]
+ └─ PHASE 7 — Intelligence Expansion        [PLANNED]
+ └─ PHASE 8 — Living SEO Intelligence      [PLANNED]
+
+ └─ DOCS-MAINT-001 — Standardize dependency-metadata convention across all 26 docs [BACKLOG, deferred per Q4]
+```
+
+Phases 2–8 remain intentionally undecomposed. `PHASE-0` was decomposed in session 5 under explicit, scope-limited human authorization ("authorize PHASE-0 decomposition; do not authorize implementation" — recorded as Q12, `PROJECT_STATE.md` § 10) and has since been fully executed (sessions 6–7, Q13–Q16). `PHASE-1` was decomposed in session 8 under the identical pattern, explicitly scope-limited to decomposition only (recorded as **Q17**, `PROJECT_STATE.md` § 10) — see § 4B below for the full eight-subtask breakdown. **No `PHASE-1` subtask has been authorized or executed.** Per explicit authorization, `BOOTSTRAP-001`, `BOOTSTRAP-002` (all subtasks), and all eight `PHASE-0` subtasks have already been executed; `BOOTSTRAP-002`'s Component Matrix and Registry output exists in full (`.ai/COMPONENT_MATRIX.md`, `.ai/OWNERSHIP.md`) and is available as RECOMMENDED context for `PHASE-1.6` (Dashboard Shell) specifically, since that subtask is the first to actually consume it in code — though `PHASE-0.6`'s own scope was scaffolding only, so nothing in `apps/web/features/` consumes that registry yet.
+
+**Decomposition ≠ authorization (still true; now fully executed).** `PHASE-0.1`–`.4` were explicitly authorized by name, in-conversation, in session 6 (recorded as **Q13**, `PROJECT_STATE.md` § 10) and executed in that session, strictly in dependency order (`.1` → `.2` → `.3` → `.4`, not in parallel, matching the § 5 sequencing note's suggestion that `.3`/`.4` *could* run in parallel — this session chose sequential execution anyway for traceability). `PHASE-0.6` and `PHASE-0.7` were explicitly authorized by name in session 7 (recorded as **Q14**) and executed. `PHASE-0.5` initially carried an extra gate (Observation #1) that a same-session re-authorization, given after the flag was explained, was treated as resolving (**Q15**) — it was then executed. `PHASE-0.8`, whose own dependency is `.5`–`.7` all reaching `DONE`, was executed last, once that was genuinely true rather than merely planned (**Q16**). All 8 `PHASE-0` subtasks are now `DONE` — see `.ai/PROJECT_STATE.md` § 4 for the full list of what was created across both sessions, and § 14 for exactly what was and wasn't verified for each.
+
+**`PHASE-1` decomposition (session 8, Q17):** the human's instruction was explicit and two-part — "decompose `PHASE-1` into implementation-ready milestones/tasks... but do not implement or authorize any `PHASE-1` task yet" — following the identical structure as Q12's `PHASE-0` instruction. `PHASE-1` was broken into eight subtasks (`PHASE-1.1`–`.8`, § 4B below), each with dependencies, required-document citations, expected output, and acceptance criteria, so that readiness (not authorization) can be assessed per `24` § 30 — exactly as `PHASE-0`'s decomposition did. No file, directory, or line of application code was created or modified; only `.ai/WBS.md`, `.ai/TASK_BOARD.md`, `.ai/PROJECT_STATE.md`, and `README.md` were touched, and no core document (`docs/*.md`) was edited. `PHASE-1.1` and `PHASE-1.7` are the two subtasks at Lifecycle Status `READY` (both roots of independent tracks — see § 5); `.2`–`.6` and `.8` sit at `BACKLOG`, each blocked on its own upstream `PHASE-1.x` prerequisite(s) — a technical/readiness gate distinct from the authorization gate that additionally applies to all eight before any of them may execute. No subtask's Authorization column reads anything other than `NOT AUTHORIZED`.
+
+## 3. Task Detail — BOOTSTRAP-002 Subtasks
+
+| Field | BOOTSTRAP-002.1 | BOOTSTRAP-002.2 | BOOTSTRAP-002.3 | BOOTSTRAP-002.4 | BOOTSTRAP-002.5 | BOOTSTRAP-002.6 |
+|---|---|---|---|---|---|---|
+| Parent | BOOTSTRAP-002 | BOOTSTRAP-002 | BOOTSTRAP-002 | BOOTSTRAP-002 | BOOTSTRAP-002 | BOOTSTRAP-002 |
+| Description | Derive definitive Foundation component inventory | Derive definitive Shared component inventory | Derive Feature component inventory per workspace | Populate full Component Registry (per bootstrap-prompt §27 schema) | Assign owner to every component | Define per-component testing requirements |
+| Purpose | Ground `.ai/COMPONENT_MATRIX.md`'s FOUNDATION tier in real content | Ground the SHARED tier | Ground the FEATURE tier | Make the matrix machine/agent-readable | Prevent duplicate/conflicting ownership | Ensure nothing ships untested |
+| Dependencies | BOOTSTRAP-001 (DONE) | BOOTSTRAP-002.1 | BOOTSTRAP-002.1, BOOTSTRAP-002.2 | BOOTSTRAP-002.1–002.3 | BOOTSTRAP-002.4 | BOOTSTRAP-002.4 |
+| Required Docs | 19 §§33–49 | 17 §66, 19 §§45–49 | 17, 18 §9.2, per-workspace sections of 17 | COMPONENT_MATRIX.md draft | OWNERSHIP.md draft | 22 |
+| Expected Output | Confirmed Foundation list | Confirmed Shared list | Confirmed Feature list, grouped by workspace | Fully populated registry entries | Ownership table | Test-requirement table |
+| Acceptance Criteria | Every item traceable to a doc section | Every item traceable + no Foundation duplicates | Every item traceable + no Shared duplicates | Every component has all schema fields filled | Every component has exactly one owner | Every component has ≥1 test requirement |
+| Human Approval Required | No (derivation, not decision) | No | No | No | Yes, if ownership is contested | No |
+| Complexity | Low | Low | Medium | Medium | Low | Low |
+| Status | `DONE` | `DONE` | `DONE` | `DONE` | `DONE` (Dashboard resolved — see `PROJECT_STATE.md` Q11) | `DONE` |
+
+## 4. Task Detail — PHASE-0 Subtasks (decomposed session 5; `.1`–`.4` authorized & executed session 6; `.5`–`.8` authorized & executed session 7 — all 8 subtasks now `DONE`)
+
+Source: `24_INDEX_ROADMAP_TASKS_DEPENDENCIES.md` § 17 (Objective + Exit Criteria), § 29–31 (decomposition/readiness/authorization rules), § 69 (implementation-sequence guidance — informative, not binding); technical grounding from `07_TECHNICAL_ARCHITECTURE.md` and `20_PROJECT_STRUCTURE.md` as cited per subtask. Given the field count, one block per subtask is used instead of the wide table style in § 3, for readability.
+
+**Phase-level Exit Criteria** (`24` § 17, unchanged, restated for traceability only): project runs locally + database works + core API works + frontend foundation works + testing foundation exists + project state is persistent. No `PHASE-0.x` subtask is individually sufficient to close the phase; § "Parallelization / Sequencing Notes" below maps subtasks to these criteria.
+
+---
+
+**`PHASE-0.1` — Repository Bootstrap & Control-System Persistence**
+- Parent: `PHASE-0` · Dependencies: `BOOTSTRAP-002` (`DONE`) · Complexity: Low
+- Description: Establish the canonical monorepo skeleton (`apps/`, `backend/`, `packages/`, `infrastructure/`, `integrations/`, `prompts/`, `tests/`, `docs/`, `scripts/`, root config files) and check the existing `.ai/` control system into that same repository as version-controlled files, rather than leaving it as a session-external artifact.
+- Purpose: Every other `PHASE-0.x` subtask, and everything past it, needs a real repository to land in; this also satisfies the "project state is persistent" exit criterion and the "project control system" scope item (`24` § 17) by making `.ai/` itself part of what's under version control.
+- Required Docs: `20` §§3–4 (canonical layout, monorepo strategy), `20` § 62 (repository hygiene — secrets/artifacts that must never be committed), `23` § 1 (what the control system is, so it's persisted faithfully, not reinvented).
+- Expected Output: An initialized repository matching `20` § 3's top-level shape (empty leaf directories only where a real boundary is already implied — `20` § 68 explicitly warns against creating empty directories merely to satisfy the doc); `.ai/*.md` committed; a `.gitignore` that covers **both** the existing Node/TypeScript/Next.js/Vercel patterns **and** Python/FastAPI patterns (closing `PROJECT_STATE.md` Risk R1, which today is open only because no repo exists to fix it in).
+- Acceptance Criteria: (1) top-level layout matches `20` § 3; (2) `.ai/` is present and committed; (3) `.gitignore` closes R1; (4) no secrets, credentials, or generated artifacts are committed (`20` § 62).
+- Human Approval Required: No — structural scaffolding with no contested decision.
+- **Execution (session 6):** all 4 acceptance criteria met — git repo initialized with `.ai/` committed; top-level layout matches `20` § 3 (directories without immediate content carry a `README.md` explaining scope/deferral per § 68, rather than being silently empty); `.gitignore` extended with Python/FastAPI patterns (verified via `git check-ignore` against sample paths — see `PROJECT_STATE.md` § 14); no secrets committed (only `.env.example` is tracked, confirmed).
+- Lifecycle Status: `DONE` · Verification Status: `IMPLEMENTED` (structural checks passed; see `PROJECT_STATE.md` § 14) · **Authorization: AUTHORIZED** (explicit human authorization, session 6 — Q13)
+
+**`PHASE-0.2` — Environment & Configuration Foundation**
+- Parent: `PHASE-0` · Dependencies: `PHASE-0.1` · Complexity: Low–Medium
+- Description: Define the environment model (development/test/staging/production) and the three-way configuration split (application / secret / runtime), typed and validated at process startup.
+- Purpose: Nothing downstream (DB connection, API, auth, observability) can be environment-aware or avoid hardcoded secrets without this existing first.
+- Required Docs: `07` §§57–59 (secrets management, configuration categories, environment model), `20` § 59 (environment structure; "configuration → behavior," not environment-forked business logic).
+- Expected Output: A config-loading module design/stub, `.env.example`, and a documented contract for which variables belong to which of the three configuration categories.
+- Acceptance Criteria: (1) all three configuration categories (`07` § 58) are represented; (2) config is typed/validated at startup, not read ad hoc; (3) no secret has a hardcoded fallback; (4) `.env.example` exists and is the only environment file tracked in git (real `.env*` stays out, per `20` § 62).
+- Human Approval Required: No.
+- **Execution (session 6):** `ApplicationSettings`/`SecretSettings`/`RuntimeSettings` (pydantic-settings `BaseSettings`) implement all 3 categories; `SecretSettings.database_url`/`secret_key` have no default, so a missing value raises at construction (design-level, not runtime-confirmed — see below); `.env.example` documents every variable by category and is the only env file tracked (confirmed via `git check-ignore`). **Not runtime-verified:** `pydantic`/`pydantic-settings` could not be installed in this session's sandbox (no network access) — code is syntax-checked (`ast.parse`) only, not import-tested or executed.
+- Lifecycle Status: `DONE` · Verification Status: `IMPLEMENTED` / `UNVERIFIED` (structural completeness confirmed; startup-validation behavior not executed) · **Authorization: AUTHORIZED** (explicit human authorization, session 6 — Q13)
+
+**`PHASE-0.3` — Database Foundation & Migrations**
+- Parent: `PHASE-0` · Dependencies: `PHASE-0.1`, `PHASE-0.2` · Complexity: Medium
+- Description: Stand up PostgreSQL connectivity and a migration tool (per `07`'s Python/FastAPI baseline stack, an Alembic-class tool), with an initial migration establishing the migration framework itself — not domain schema, which belongs to later phases once entities exist.
+- Purpose: Satisfies the "database works" exit criterion at the foundation level, ahead of any domain modeling.
+- Required Docs: `07` §§26–30 (PostgreSQL, database access, transactions, constraints, migrations), `20` § 29 (database structure placement) and § 30 (repository pattern boundary).
+- Expected Output: A working local DB connection module; migrations run cleanly up and down; `infrastructure/database` populated per `20` § 3.
+- Acceptance Criteria: (1) DB reachable from the app locally; (2) at least one migration applies and reverts cleanly; (3) no raw SQL string-concatenation entry points (`07` § 27's access-boundary principle).
+- Note (non-blocking): `07` § 32 leaves the semantic-retrieval vector store open (pgvector vs. a dedicated store) — out of scope here, since Phase 0 has no semantic retrieval yet; see Observation #2 below.
+- Human Approval Required: No.
+- **Execution (session 6):** async SQLAlchemy engine/session (`backend/app/infrastructure/database/`) + Alembic wired via the standard async `run_sync()` bridge (`infrastructure/database/migrations/`), with an initial no-op migration establishing the framework itself (no domain schema, per this subtask's own scope). Criterion (3) is grep-verified: no raw SQL string concatenation anywhere in the new code. **Criteria (1) and (2) are NOT runtime-verified** — this session's sandbox had no network access (`sqlalchemy`/`asyncpg`/`alembic` could not be installed) and no local PostgreSQL server. Recorded as new **Risk R9** (`PROJECT_STATE.md` § 9): a future session with package-install and DB access must run `alembic upgrade head` / `alembic downgrade base` against a real database before this is `RUNTIME_VERIFIED`.
+- Lifecycle Status: `DONE` · Verification Status: `IMPLEMENTED` / `PARTIALLY_VERIFIED` (criterion 3 verified; criteria 1-2 unverified — see Risk R9) · **Authorization: AUTHORIZED** (explicit human authorization, session 6 — Q13)
+
+**`PHASE-0.4` — API Foundation**
+- Parent: `PHASE-0` · Dependencies: `PHASE-0.1`, `PHASE-0.2` · Complexity: Medium
+- Description: Stand up the FastAPI application skeleton — versioning scheme (`/api/v1/...`), request validation boundary, a standard response/error envelope, and a health-check endpoint. No domain endpoints (`/entities`, `/topics`, etc. — `07` § 15's conceptual groups) are in scope; those belong to the phases that build the domains behind them.
+- Purpose: Satisfies "core API works" at the foundation level; gives `PHASE-0.5` (auth) and `PHASE-0.6` (frontend) something concrete to attach to.
+- Required Docs: `07` §§15–20 (API architecture, versioning, request validation, response contracts, error architecture, HTTP error semantics), `20` § 7 (API layer responsibilities/placement).
+- Expected Output: `apps/api` + `backend/app/api` scaffolded per `20` §§3,7; a versioned health-check route; a shared error-response shape matching `07` § 19's structure.
+- Acceptance Criteria: (1) API boots locally; (2) `/api/v1/health` (or equivalent) responds; (3) error responses follow the `07` § 19 shape with correct HTTP semantics per § 20; (4) malformed input is rejected before reaching any domain logic placeholder (§ 17).
+- Human Approval Required: No.
+- **Execution (session 6):** `backend/app/main.py` (`create_app()` factory) wires `/api/v1/health`, a request-ID middleware, and 3 registered exception handlers. Criterion (3) is grep/manually verified: `ErrorResponse`/`ErrorBody` match § 19's shape exactly (code/message/details/request_id/retryable); the `AppError` hierarchy covers every § 20 HTTP status (400/401/403/404/409/422/429/500/502/504). Criterion (4) is satisfied structurally — FastAPI/Pydantic's `RequestValidationError` handler runs before any route body executes; no domain endpoints exist yet to exercise this end-to-end, matching this subtask's own explicit no-domain-endpoints scope. **Criteria (1) and (2) are NOT runtime-verified** — `fastapi`/`uvicorn` could not be installed in this session's sandbox (no network access). Recorded under the same **Risk R9** as `PHASE-0.3`.
+- Lifecycle Status: `DONE` · Verification Status: `IMPLEMENTED` / `PARTIALLY_VERIFIED` (criteria 3-4 verified; criteria 1-2 unverified — see Risk R9) · **Authorization: AUTHORIZED** (explicit human authorization, session 6 — Q13)
+
+**`PHASE-0.5` — Authentication Foundation**
+- Parent: `PHASE-0` · Dependencies: `PHASE-0.2`, `PHASE-0.4` · Complexity: Medium
+- Description: Session/token authentication mechanism (secure password storage, session or token issuance, session expiration, account-recovery hooks) at the application/security boundary. Explicitly **excludes** the full user/workspace/project authorization model — `24` § 18 lists "user/workspace/project model" and "authorization" as `PHASE-1` (Core Platform) scope, not `PHASE-0`.
+- Purpose: Satisfies the "authentication foundation" scope item (`24` § 17) as a mechanism, without pulling forward `PHASE-1`'s domain-model work.
+- Required Docs: `07` §§53–56 (authentication, authorization, multi-tenancy, tenant isolation — §§54–56 read for boundary awareness even though their full implementation is out of scope here).
+- Expected Output: An auth module that can issue/validate a session or token and store credentials securely, independently testable, with no real user/workspace/project records behind it yet.
+- Acceptance Criteria: (1) credentials are never stored in plaintext; (2) sessions/tokens expire; (3) the module is testable without a full user domain existing; (4) it does not implement per-resource authorization (that is out of scope by design, not an oversight).
+- **Human Approval Required: Yes** — see Observation #1 below. The `PHASE-0` (mechanism) / `PHASE-1` (model + authorization) split above is this session's interpretation of an overlap between `24` §§17–18, not something the source documents state explicitly.
+- **Resolution (session 7, Q15):** the human re-issued "execute and Authorize `PHASE-0.5`" immediately after Observation #1 was explicitly surfaced and its substance explained in the prior turn, without requesting a different scope. Treated as confirmation of the interpretation already recorded above and in Observation #1 (bare mechanism only), not as a new, unexamined authorization — recorded explicitly as Q15 (`PROJECT_STATE.md` § 10) rather than silently assumed.
+- **Execution (session 7):** `backend/app/security/authentication/{passwords.py,tokens.py}` implement the mechanism. `passwords.py` — `bcrypt`-backed hashing (newly declared dependency), operating on raw strings only (criterion 3), never returning or persisting the plaintext (criterion 1). `tokens.py` — PyJWT-backed (also newly declared) issuance/verification of short-lived "access" and "password_reset" tokens, both carrying an `exp` claim (criterion 2); operates on an opaque `subject` string, never a user record (criterion 3); `decode_access_token` returns only a verified subject, no permission check (criterion 4). `authorization/`, `permissions/`, `tenancy/`, `secrets/`, `audit/`, `policies/` (the rest of `20` § 23's security directory shape) were created as reserved placeholders only, same convention as `PHASE-0.1`/`.7`'s other not-yet-populated layers — satisfying criterion 4 by construction, not omission. **PyJWT's exact encode/decode/exception-handling pattern used in `tokens.py` was spot-checked against a real installed copy in this session's sandbox (PyJWT 2.7.0 — confirmed importable, unlike every other declared dependency)** — round-trip encode→decode, expired-token → `ExpiredSignatureError`, wrong-secret → `InvalidTokenError` were all directly confirmed to behave as the code assumes. This does **not** make the module itself runtime-verified: `tokens.py` still cannot be *imported* end-to-end this session, since it depends on `get_settings()` → `pydantic-settings`, not installed (Risk R9); `bcrypt` was not installed or import-tested at all. No test file was written for this subtask — test-writing is `PHASE-0.8` scope.
+- Non-blocking observation recorded (`.ai/WBS.md` § 4, **Observation #5**): `backend/app/security/secrets/` (this subtask, reserved) vs. `backend/app/infrastructure/config`'s `SecretSettings` (`PHASE-0.2`, implemented) is a second "same word, different concern" pair, alongside `backend/app/security/audit/` (this subtask, reserved) vs. `backend/app/observability/audit/` (`PHASE-0.7`, reserved) — both documented in-file where they live.
+- Lifecycle Status: `DONE` · Verification Status: `IMPLEMENTED` / `UNVERIFIED` (criteria 1, 3, 4 structurally verified by inspection; criterion 2, the `exp`-claim mechanism, additionally spot-checked against a real PyJWT install — see above; no live execution of the module itself — Risk R9) · **Authorization: AUTHORIZED** (explicit human authorization, session 7 — Q15, resolving Observation #1)
+
+**`PHASE-0.6` — Frontend Foundation**
+- Parent: `PHASE-0` · Dependencies: `PHASE-0.1`, `PHASE-0.2`, `PHASE-0.4` · Complexity: Medium
+- Description: Next.js (per `07` § 3's baseline) application shell under `apps/web`, with the feature/domain-oriented directory structure (`app/`, `components/`, `features/`, `lib/`, `hooks/`, `stores/`, `services/`, `types/`, `styles/`, `tests/`) and the shared `packages/ui` wired in as an importable package. No FOUNDATION/SHARED components from `.ai/COMPONENT_MATRIX.md` are implemented yet — this subtask makes them *importable in principle*, not built.
+- Purpose: Satisfies "frontend foundation works"; establishes where `BOOTSTRAP-002`'s component registry will eventually be realized in code.
+- Required Docs: `20` §§25–27 (frontend structure, feature organization, shared frontend components), `20` § 32 (`packages/ui`), `07` § 3 (framework baseline). RECOMMENDED (not required for this subtask's scaffolding, but relevant to what gets built on top of it next): `.ai/COMPONENT_MATRIX.md`, `.ai/OWNERSHIP.md`.
+- Expected Output: `apps/web` boots locally and renders a placeholder page; directory structure matches `20` § 25; `packages/ui` exists as an empty-but-wired package.
+- Acceptance Criteria: (1) frontend runs locally; (2) directory layout matches `20` § 25; (3) it consumes the versioned health endpoint from `PHASE-0.4` as a smoke test that frontend↔API wiring works; (4) no premature component implementation.
+- Human Approval Required: No.
+- **Execution (session 7):** `apps/web` (Next.js App Router) + `packages/ui` created. Directory layout matches `20` § 25 (`app/`, `components/`, `features/`, `lib/`, `hooks/`, `stores/`, `services/`, `types/`, `styles/`, `tests/`); each not-yet-populated leaf directory carries a `README.md` explaining scope/deferral (identical convention to `backend/tests/README.md` from `PHASE-0.1`), satisfying criterion (4) by construction rather than by omission. `app/page.tsx` server-fetches `PHASE-0.4`'s `/api/v1/health` (criterion 3). `packages/ui` has a `package.json`/`src/index.ts` and is depended on by `apps/web` as an npm workspace package (root `package.json`, new this session), consumed via Next's `transpilePackages` — "empty-but-wired," per this subtask's own Expected Output wording. **Criterion (1), "frontend runs locally," is NOT runtime-verified** — this session's sandbox has `node`/`npm`/`tsc` binaries but the same no-network-access limitation as session 6 (registry.npmjs.org returned `host_not_allowed`), so `npm install`/`next dev`/`next build` could not run. JSON configs were validated (`python3 json.load`); TypeScript was syntax-spot-checked with the sandbox's standalone `tsc` (module-resolution errors for `react`/`next` expected and ignored, since no `node_modules` exist). Criteria (2), (3), (4) are structurally verified by inspection.
+- Lifecycle Status: `DONE` · Verification Status: `IMPLEMENTED` / `UNVERIFIED` (criteria 2–4 structurally verified; criterion 1 unverified at runtime — see Risk R9) · **Authorization: AUTHORIZED** (explicit human authorization, session 7 — Q14)
+
+**`PHASE-0.7` — Observability Foundation**
+- Parent: `PHASE-0` · Dependencies: `PHASE-0.1`, `PHASE-0.4` · Complexity: Low–Medium
+- Description: Structured logging, metrics, and tracing wired at the API-foundation level (`backend/app/observability/{logging,metrics,tracing,audit,events}`). AI-specific observability fields (model/provider/token usage/cost — `20` § 24) are out of scope until an AI runtime exists (later phase).
+- Purpose: Baseline operability so that `PHASE-0.4`'s API isn't a black box from the first request onward.
+- Required Docs: `20` § 24 (observability structure), `07` § 3 (observability stack line: structured logging/metrics/tracing).
+- Expected Output: Requests through the `PHASE-0.4` health endpoint produce structured log lines; a minimal metrics surface exists (even if just a `/metrics` stub or exporter wiring).
+- Acceptance Criteria: (1) each request is logged with structured fields (not raw string logs); (2) a metrics endpoint or exporter is reachable; (3) no AI-specific fields are fabricated ahead of an actual AI runtime.
+- Human Approval Required: No.
+- **Execution (session 7):** `backend/app/observability/{logging,metrics,tracing,audit,events}` created. `logging/` is stdlib `logging` + a custom `JSONFormatter` (dependency-free by choice — documented in-file); `metrics/` is `prometheus_client`-backed (newly declared in `pyproject.toml`); `tracing/` is a lightweight contextvar-based span tracker with no external backend wired (none exists yet to export to — documented as a deliberate placeholder). `audit/` and `events/` are reserved placeholders, same convention `backend/app/domain`, `security`, etc. used from `PHASE-0.1`. A single middleware (`backend/app/api/middleware/logging.py`) both logs each request with structured fields and records the metrics `/metrics` (`backend/app/api/routes/metrics.py`, deliberately unversioned — see in-file docstring) serves, satisfying criteria (1) and (2) together. Criterion (3) held by construction — no AI-specific field appears anywhere in this subtask's code. **Not runtime-verified** — same sandbox limitation as `PHASE-0.2`–`.4` (Risk R9): `prometheus_client` could not be installed or import-tested. Verified structurally: all 50 backend `.py` files parse (`ast.parse`); every `logger.*()` call site in the codebase confirmed via AST inspection (not just `grep`) to carry structured `extra=` fields — zero raw-string log calls exist anywhere in `backend/app/`.
+- Lifecycle Status: `DONE` · Verification Status: `IMPLEMENTED` / `UNVERIFIED` (criteria 1–3 structurally verified; no live execution — see Risk R9) · **Authorization: AUTHORIZED** (explicit human authorization, session 7 — Q14)
+
+**`PHASE-0.8` — Testing Foundation & CI**
+- Parent: `PHASE-0` · Dependencies: `PHASE-0.1`–`.7` (touches all of them; see sequencing note below for what can start earlier) · Complexity: Medium
+- Description: Wire test runners (backend + frontend) and a CI pipeline skeleton (`20` § 61: formatting → linting → type-checking → unit → integration → contract → AI evaluation → security → build → E2E, order optimizable for speed), plus the `tests/{fixtures,golden,evaluation,e2e}` layout (`20` § 3). Scope is limited to the **mandatory foundation-relevant subset** of `22` § 120's Minimal MVP Testing Scope — unit/API/DB-integration/contract test scaffolding — since domain, agent, workflow, and AI-golden tests have no subject matter to test until later phases build it. *(Correction, session 7: the stage list above now names all ten of `20` § 61's stages — the original session-5 wording of this line dropped "AI evaluation" and "security" between "contract" and "build"; both are real jobs in `.github/workflows/ci.yml`, so this line is corrected to match rather than left inaccurate.)*
+- Purpose: Closes the "testing foundation exists" exit criterion; prevents every subsequent phase from having to invent test plumbing ad hoc.
+- Required Docs: `22` § 120 (Minimal MVP Testing Scope), `20` §§33 (Tests directory), 61 (CI structure).
+- Expected Output: A CI config that runs on push; a passing (even if placeholder) test in each of backend-unit, frontend-unit, and API-integration categories.
+- Acceptance Criteria: (1) CI executes the `20` § 61 stage order (or a documented, justified reordering); (2) at least one real (non-trivial) test exists per mandatory category reachable at foundation level; (3) CI fails on a deliberately broken build, proving it isn't a no-op.
+- Human Approval Required: No.
+- **Execution (session 7):** All ten `20` § 61 stages implemented as sequential, `needs:`-chained jobs in `.github/workflows/ci.yml` (criterion 1) — `ai-evaluation` and `e2e` are explicit, documented no-op jobs (nothing exists yet to evaluate or automate), not silently dropped stages. Three test categories populated per the Expected Output: `backend/tests/unit/` (two files — see below), `backend/tests/api/test_health_endpoint.py` (API-integration — real `TestClient` round trip through `create_app()`), `apps/web/tests/unit/health.test.ts` (frontend-unit — Vitest, mocking `fetch`). A fourth category, `backend/tests/contract/test_response_schemas.py`, was added beyond the three named ones to give the `contract-tests` CI stage genuine content distinct from `api-integration`'s live-request check — validates `HealthResponse` (new: `backend/app/api/schemas/health.py`, now `health.py`'s `response_model`) and the existing `ErrorResponse`/`ErrorBody` directly. `security-tests` runs `bandit` (new dev dependency) against `backend/app`, meaningful now that `backend/app/security/` (`PHASE-0.5`) exists.
+- **Criterion (3), proven for real, not just asserted:** `backend/tests/unit/test_error_hierarchy.py` has zero third-party imports (`backend.app.api.errors.exceptions` only needs `typing`) — reaching that required removing an unnecessary eager `fastapi` import from `backend/app/api/errors/__init__.py` (it re-exported `register_exception_handlers`, but nothing in the codebase actually imported it via that path; `main.py` already imports directly from `.handlers`). With that fixed, the test file was **actually executed** in this session's sandbox: all 6 tests passed, then `AuthenticationError.http_status` was deliberately changed from 401 to 200, the suite was re-run and failed with the correct diagnostic message, then the change was reverted and the suite passed again. This is the first test in this project to reach genuine `RUNTIME_VERIFIED` status for at least this one file — see `.ai/PROJECT_STATE.md` § 14 for the full transcript-level record.
+- **Everything else remains `UNVERIFIED`:** `test_authentication_tokens.py` (needs `pydantic-settings`/`bcrypt`), `test_health_endpoint.py` (needs `fastapi`/`httpx`), `test_response_schemas.py` (needs `pydantic`), `health.test.ts` (needs `vitest` via `npm install`), and the CI workflow itself (never run against a real GitHub Actions runner) — all blocked on the same sandbox limitation as every other subtask this session (Risk R9). `[tool.ruff]`/`[tool.mypy]` config was added to `pyproject.toml` deliberately lenient/unopinionated, since neither tool could be tuned against real output this session either.
+- Lifecycle Status: `DONE` · Verification Status: `IMPLEMENTED` / `PARTIALLY_VERIFIED` (one test file genuinely `RUNTIME_VERIFIED`; the rest `UNVERIFIED` — see above) · **Authorization: AUTHORIZED** (explicit human authorization, session 7, executed after `.5` per the human's explicit "then" — see `.ai/PROJECT_STATE.md` § 10, **Q16**)
+
+---
+
+### Non-Blocking Observations (parallel to `COMPONENT_MATRIX.md` § 6's pattern — recorded, not silently resolved)
+
+- **Obs. #1 — Authentication split (`PHASE-0.5` vs. `24` § 18's `PHASE-1` scope) — resolved.** `24` § 17 lists "authentication foundation" under `PHASE-0`; § 18 separately lists "authentication" (and "authorization") under `PHASE-1`. This decomposition resolved the overlap by reading `PHASE-0` as the bare mechanism and `PHASE-1` as the user/workspace/project model built on top — consistent with `07` §§53–54 treating authentication and authorization as distinct concerns — but the source documents don't state this split explicitly. Flagged for human confirmation before `PHASE-0.5` was authorized; **confirmed session 7 (Q15, `.ai/PROJECT_STATE.md` § 10)** when the human re-issued `PHASE-0.5`'s authorization immediately after this flag was explained, without requesting a different scope. `PHASE-0.5` was executed under the bare-mechanism interpretation.
+- **Obs. #2 — Vector store choice deferred.** `07` § 32 leaves pgvector-vs-dedicated-store open. Not needed until semantic retrieval exists (Phase 2/3 territory per `24` §§19–20), so `PHASE-0.3` deliberately excludes it. Tracked here so it isn't forgotten by the time it's actually needed.
+- **Obs. #3 — Frontend framework baseline treated as settled, not reopened.** `07` § 3 phrases the frontend line as "Next.js_or_equivalent_approved_web_framework." This decomposition treats Next.js as the working baseline for `PHASE-0.6`, consistent with the repository's own `.gitignore` already targeting Node/TypeScript/Next.js/Vercel (see Risk R1) rather than re-litigating framework choice at the foundation stage.
+- **Obs. #4 — Two unrelated "events" concepts, same word (found during `PHASE-0.7` execution, session 7).** `20` § 24 places an `events/` submodule under `backend/app/observability/` (analytics-style observability events — "a workflow entered a new state," etc.). `20` § 50 separately describes a domain/application/integration event bus at `backend/app/events/` (not yet created), explicitly for decoupling in-process function calls. These are different concerns that happen to share a directory name at different tree depths. Not blocking anything today — `backend/app/events/` doesn't exist yet — but flagged so whichever later phase creates it doesn't fold the two together, or so a reader doesn't confuse `backend/app/observability/events/`'s docstring cross-reference for the same thing.
+- **Obs. #5 — Two more "same word, different concern" pairs (found during `PHASE-0.5` execution, session 7).** (a) `backend/app/security/secrets/` (`20` § 23, reserved placeholder — secret *handling infrastructure*, e.g. vault integration) vs. `backend/app/infrastructure/config`'s `SecretSettings` (`PHASE-0.2`, implemented — secret *loading* from environment variables at startup). (b) `backend/app/security/audit/` (`20` § 23, reserved placeholder — the *policy* of what security-relevant actions must be retained) vs. `backend/app/observability/audit/` (`20` § 24, reserved placeholder — the generic technical *sink* that would persist such a record). Neither pair is blocking — both sides of both pairs are either not yet implemented or, in `SecretSettings`'s case, already doing something narrower than the overlapping name suggests. Recorded in each affected `__init__.py` directly, and here for a single point of reference.
+
+## 4B. Task Detail — PHASE-1 Subtasks (decomposed session 8, 2026-09-09 — explicit human authorization for decomposition only, no implementation authorized — see `.ai/PROJECT_STATE.md` § 10, **Q17**)
+
+Source: `24_INDEX_ROADMAP_TASKS_DEPENDENCIES.md` § 18 (Phase 1 Objective / "Potential capabilities" / Exit Criteria), §§ 29–31 (decomposition/readiness/authorization rules, applied identically to how `PHASE-0` was decomposed in session 5 — see § 4 above), § 87 (Execution Planning Algorithm — the twelve-step process this decomposition follows: identify objective → capabilities → dependencies → decompose → validate boundaries → define acceptance criteria → identify context/tooling/risks → determine readiness; stops at step 11, "Determine readiness" — step 12, "Request authorization," is explicitly *not* taken this session, per the human's own instruction), §§ 93–98 (MVP Planning Principle, Suggested MVP Capability Chain, Critical Product Distinctions, Planning Quality Gates, Anti-Patterns — used throughout as a checklist, see § "Decomposition Method" below); technical grounding from `06_DATA_ARCHITECTURE.md`, `07_TECHNICAL_ARCHITECTURE.md`, `16_OUTPUT_CONTRACTS.md`, `17_UI_UX_SPECIFICATION.md`, `20_PROJECT_STRUCTURE.md`, `22_TESTING_AND_VALIDATION.md`, `25_CONTEXT_MANAGEMENT.md` as cited per subtask. One block per subtask, matching § 4's style.
+
+**Phase-level Objective** (`24` § 18): "Build the platform required to operate projects and users."
+
+**Phase-level Exit Criteria** (`24` § 18, restated for traceability only): "A user can create and manage an SEO project through the platform." Unlike `PHASE-0`'s compound (six-part `+`) exit criteria, `PHASE-1`'s is a single user-facing outcome — satisfied specifically by the dependency chain `PHASE-1.1` → `PHASE-1.3`/`.4` → `PHASE-1.5` (see § 5 below for the full graph). `PHASE-1.6`–`.8` extend past the bare exit criterion (dashboard UX, AI runtime, context scaffolding) rather than gating it — consistent with `24` § 18's own "Potential capabilities" list naming ten items where the Exit Criteria names only one outcome; this decomposition does not read every listed capability as independently phase-gating, matching `PHASE-0`'s own precedent (`.5`–`.8` were listed under Phase 0's "potential scope" but weren't each individually required by the compound exit criteria either).
+
+**`24` § 18's "Potential capabilities" list, mapped 1:1 (with one deliberate merge — see Observation #6) onto eight subtasks:**
+
+| `24` § 18 capability | Subtask(s) |
+|---|---|
+| user/workspace/project model | `PHASE-1.1` |
+| persistence | `PHASE-1.1` (merged — Observation #6) |
+| authentication | `PHASE-1.2` |
+| authorization | `PHASE-1.3` |
+| API contracts | `PHASE-1.4` |
+| project creation | `PHASE-1.5` |
+| project settings | `PHASE-1.5` |
+| dashboard | `PHASE-1.6` |
+| basic AI runtime | `PHASE-1.7` |
+| context foundation | `PHASE-1.8` |
+
+**Decomposition Method — Gate/Anti-Pattern self-check (`24` §§ 97–98), performed for this decomposition as a whole before any individual subtask was finalized:**
+- Gate 1 (Scope): each subtask below is bounded to one `24` § 18 capability (or a deliberate, disclosed two-capability merge — Obs. #6) — not the "Giant Task" anti-pattern (`98.1`, e.g. "build Core Platform").
+- Gate 2 (Dependency): every subtask's dependencies are named explicitly below and cross-checked against actual current `.ai/TASK_BOARD.md` status (`PHASE-0.1`–`.8`, all genuinely `DONE`) — not assumed from planning intent (`98.3` Dependency Blindness).
+- Gate 3 (Authority): no subtask below is marked `AUTHORIZED`; this decomposition is not itself permission to implement (`98.4` Roadmap as Authorization) — see `.ai/TASK_BOARD.md`.
+- Gate 4 (Context): each subtask names its `REQUIRED` source-document sections, following `.ai/SESSION_PROMPT.md`'s Context Retrieval Procedure — no subtask requires "the entire project in every prompt" (`25` Anti-Pattern `97.1`).
+- Gate 5 (Verification): each subtask has explicit, checkable acceptance criteria (`24` § 33's model) — none rely on "the app starts" or percentage-based completion (`22` Anti-Pattern, `24` `98.5`).
+- Gate 6 (Risk): four genuine ambiguities were found and are disclosed as Observations #6–#9 below; two of them — Observation #7 (`PHASE-1.6`'s scope) and Observation #8 (`PHASE-1.7`'s provider choice) — carry `Human Approval Required: Yes` on their respective subtask, while Observations #6 and #9 are disclosed but not gated — none silently resolved, per `SESSION_PROMPT.md`'s Non-Negotiables and the `03_MASTER_RULES.md` § 5 "No Silent Decisions" principle.
+- Gate 7 (Handoff): every subtask's block below is self-contained enough that a future session (or a different AI instance) can pick up any one of them from this file plus `.ai/TASK_BOARD.md` alone, without this conversation's history — consistent with `PROJECT_STATE.md`'s own "authoritative snapshot" standard.
+- Anti-pattern `98.2` (Artificial Micro-Tasks) checked against: eight subtasks for ten capabilities is comparable in granularity to `PHASE-0`'s eight subtasks for eleven "potential scope" items — not finer-grained without cause.
+- Anti-pattern `96` (Critical Product Distinctions) checked against: "Recommendation ≠ Decision," "Implementation ≠ Verification" are preserved — no subtask below claims verification it hasn't earned, and none of `PHASE-1`'s capabilities collapse a Product Distinction (none of the ten touches Entity/Topic/Keyword/Query/Intent/SERP/Page territory — that's `PHASE-2`+).
+
+---
+
+**`PHASE-1.1` — Core Domain Model & Persistence (User / Workspace / Project)**
+- Parent: `PHASE-1` · Dependencies: `PHASE-0.2` (`DONE`), `PHASE-0.3` (`DONE`) · Complexity: Medium–High
+- Description: Domain entities for `User`, `Workspace`, `Project` (`06` §§5–8: the Organization→Workspace→Project→SEO-Knowledge boundary; the Core Identity Model's stable-ID convention; Business Model attributes at the Project level) in `backend/app/domain/` (currently an empty placeholder — see its own `__init__.py`); SQLAlchemy models plus the first real (non-empty) Alembic migration, extending `PHASE-0.3`'s scaffold; a repository layer (`20` § 30) for these three entities in `backend/app/infrastructure/repositories/`, with every project-scoped repository method requiring an explicit workspace/project identifier by construction — the data-layer half of tenant isolation (`07` § 55: "every query involving project-scoped data must enforce ownership boundaries"). Permission *checking* (who is allowed to call these methods) is explicitly `PHASE-1.3`'s scope, not this one's.
+- Purpose: Every other `PHASE-1` capability needs real `User`/`Workspace`/`Project` records to operate on; this is the load-bearing subtask the rest of the phase's dependency graph roots from (see § 5 below).
+- Required Docs: `06` §§5–8 (Tenant/Workspace Boundary, Core Identity Model, Entity Identity, Business Model), §§54–55 (Referential Integrity, Uniqueness); `20` §§29–30 (Database Structure, Repository Pattern); `07` §§26–30 (Postgres/DB Access/Transactions/Constraints/Migrations — re-grounding, already applied in `PHASE-0.3`); `03` § 144 (Database Is Not Just Storage), § 145 (Persistence Must Reflect Domain State).
+- Expected Output: `User`, `Workspace`, `Project` domain entities (independent of infrastructure, per `07` § 14 Dependency Direction); corresponding SQLAlchemy models; a real, reversible Alembic migration creating the tables; repositories exposing project/workspace-scoped queries only.
+- Acceptance Criteria: (1) `User`/`Workspace`/`Project` entities exist in the domain layer with no infrastructure import; (2) the Organization→Workspace→Project hierarchy is represented with stable IDs (`06` § 6); (3) a real migration creates the tables and is confirmed reversible (`up`/`down`); (4) every project-scoped repository method takes an explicit workspace/project identifier — no method can return cross-project data by omission; (5) referential integrity and uniqueness constraints (`06` §§54–55) are enforced at the database level, not just in application code.
+- Human Approval Required: No (structural domain modeling; no contested decision) — but see **Observation #6** (disclosed, not gated): this subtask deliberately merges `24` § 18's "user/workspace/project model" and "persistence" line items rather than splitting them into two subtasks.
+- Lifecycle Status: `READY` (both dependencies genuinely `DONE`, confirmed against `.ai/TASK_BOARD.md` directly, not assumed) · Verification Status: `UNVERIFIED` (not yet implemented) · **Authorization: NOT AUTHORIZED**
+
+**`PHASE-1.2` — Authentication: Real User Binding**
+- Parent: `PHASE-1` · Dependencies: `PHASE-1.1`, `PHASE-0.5` (`DONE`) · Complexity: Medium
+- Description: Extends `PHASE-0.5`'s bare mechanism — which by its own acceptance criterion 3 was deliberately "testable without a full user domain existing," operating on an opaque `subject` string — into real registration/login/logout flows backed by `PHASE-1.1`'s `User` entity, plus a real (even if minimal) account-recovery path (`07` § 53) in place of `PHASE-0.5`'s placeholder hook. Reuses `backend/app/security/authentication/{passwords.py,tokens.py}` as-is; does not reimplement them.
+- Purpose: Closes the gap `PHASE-0.5` explicitly left open by design, now that a real user domain exists to close it against.
+- Required Docs: `07` § 53 (Authentication); `06` §§6–8 (the identity model this binds to); the existing `passwords.py`/`tokens.py` source (read, not rewritten).
+- Expected Output: Register/login/logout use-cases and endpoints; `tokens.py`'s `subject` claim now populated from a real `User.id` instead of an arbitrary string.
+- Acceptance Criteria: (1) registration creates a real `User` record via `PHASE-0.5`'s existing `bcrypt`-backed hashing — not reimplemented; (2) login issues a token bound to a real `user_id`; (3) `PHASE-0.5`'s own criteria are not regressed: credentials still never stored/returned in plaintext, tokens still expire; (4) the account-recovery path has a real (if minimal) implementation, not a stub.
+- Human Approval Required: No.
+- Lifecycle Status: `BACKLOG` (blocked on `PHASE-1.1` reaching `DONE` — technical/readiness gate, `24` § 30, independent of authorization) · Verification Status: `UNVERIFIED` · **Authorization: NOT AUTHORIZED**
+
+**`PHASE-1.3` — Authorization Foundation (User / Workspace / Project level)**
+- Parent: `PHASE-1` · Dependencies: `PHASE-1.1`, `PHASE-1.2` · Complexity: Medium–High
+- Description: A role/membership model (who belongs to which `Workspace`/`Project`, at what role) and permission-check logic operating at user/workspace/project level (`07` § 54). Resource-level and tool/action-level authorization are explicitly deferred — see **Observation #9** — mirroring `PHASE-0.5`'s own precedent of deferring exactly this for the identical reason (nothing to authorize against yet). Populates `backend/app/security/{authorization,permissions,tenancy}/`, which today carry `__init__.py` docstrings that already read "Reserved for `PHASE-1`" (confirmed by direct inspection of the current repository, not assumed from the docs alone).
+- Purpose: Closes `03_MASTER_RULES.md` § 108 ("Authentication ≠ Authorization") — `PHASE-1.2` only proves *who*; this proves *what they're allowed to do*. Also the first real application-layer enforcement of tenant isolation (`07` §§55–56), building on `PHASE-1.1`'s data-layer scoping.
+- Required Docs: `07` § 54 (Authorization), §§55–56 (Multi-Tenancy, Tenant Isolation); `03` § 108 (Authentication ≠ Authorization), § 109 (Never Trust Client-Supplied Identity); `22` § 14 (Multi-Tenant/Project Isolation Testing), § 52 (Security Testing).
+- Expected Output: A membership/role table (exact shape is an implementation-time decision, not decided in this planning session); an authorization dependency/check usable by API routes; used by every `PHASE-1.5` endpoint.
+- Acceptance Criteria: (1) a user cannot read or modify a workspace/project they are not a member of — proven by a negative test, not merely asserted; (2) authorization is enforced server-side only; a client-supplied workspace/project claim is never trusted on its own (`03` § 109); (3) resource-level and tool/action-level authorization are explicitly out of scope by construction, not by silent omission (Observation #9); (4) at least one privilege-escalation test and one cross-project-leakage test exist (`22` §§14, 52), even if minimal at this phase.
+- Human Approval Required: No — but this is a security-sensitive subtask (in the same risk category `PHASE-0.8`'s own verification log flagged authentication testing — "`docs/22` §108 high-risk area"); recommended for above-average human scrutiny once implemented, independent of whether decomposition-time authorization is required.
+- Lifecycle Status: `BACKLOG` (blocked on `PHASE-1.1`, `PHASE-1.2`) · Verification Status: `UNVERIFIED` · **Authorization: NOT AUTHORIZED**
+
+**`PHASE-1.4` — API Contract Layer (Auth & Projects)**
+- Parent: `PHASE-1` · Dependencies: `PHASE-0.4` (`DONE`), `PHASE-1.1` · Complexity: Medium
+- Description: Formalizes the `/auth` and `/projects` conceptual API groups (`07` § 15) as versioned, explicit request/response contracts (`16` §§4–11: Contract Definition, Layers, Producer/Consumer, Ownership, Versioning) in `packages/contracts/` (shared with the frontend) and `backend/app/contracts/api/` — both currently empty placeholders (confirmed by direct inspection: each holds only an `__init__.py`/`README.md` with a deferral note). Establishes the canonical response envelope (`16` § 12) and the already-implemented HTTP error-semantics mapping (`07` § 20, `PHASE-0.4`) applied to these two domains for the first time.
+- Purpose: `03_MASTER_RULES.md` § 97 ("No Implementation Before Specification") — contracts should exist before `PHASE-1.2`/`.5`'s endpoints are built against them, not be reverse-engineered from whatever those endpoints happen to return.
+- Required Docs: `16` §§4–11 (Contract Definition through Versioning Rules), § 12 (Canonical Output Envelope); `20` § 16 (Contracts directory), § 32 (`packages/contracts`), § 54 (Frontend/Backend Contract Boundary); `07` §§15–20 (API Architecture through HTTP Error Semantics — re-grounding).
+- Expected Output: Versioned request/response schemas for register/login/logout (`PHASE-1.2`) and project create/read/update/list (`PHASE-1.5`), present in both the backend contract location and the shared frontend-visible package, with an explicit statement of how the two stay in sync.
+- Acceptance Criteria: (1) every `PHASE-1.2`/`.5` endpoint has an explicit, versioned schema defined here before that endpoint is implemented; (2) the existing canonical envelope (`16` § 12) and HTTP error-semantics table (`07` § 20) are reused, not reinvented; (3) `packages/contracts` and `backend/app/contracts/api` agree with each other — no drift between the two locations; (4) schemas distinguish success/validation-failure/auth-failure/not-found/conflict, per `07` § 18.
+- Human Approval Required: No.
+- Lifecycle Status: `BACKLOG` (blocked on `PHASE-1.1`) · Verification Status: `UNVERIFIED` · **Authorization: NOT AUTHORIZED**
+
+**`PHASE-1.5` — Project Lifecycle (Creation & Settings)**
+- Parent: `PHASE-1` · Dependencies: `PHASE-1.1`, `PHASE-1.3`, `PHASE-1.4` · Complexity: Medium
+- Description: The application-layer use cases (`07` § 7) for creating a project within a workspace and reading/updating project settings, plus their `/projects` API endpoints (`07` § 15) — gated by `PHASE-1.3`'s authorization and shaped by `PHASE-1.4`'s contracts.
+- Purpose: **This is the subtask that directly satisfies `PHASE-1`'s own Exit Criteria** (`24` § 18: "A user can create and manage an SEO project through the platform") — every other `.1`–`.4` subtask is a prerequisite to it; `.6`–`.8` extend beyond it.
+- Required Docs: `06` § 8 (Business Model — what "project settings" may hold); `07` § 7 (Application Layer); `17` § 6 (Workspace and Project Model — UI-facing shape, read for contract alignment even though this subtask is backend-only).
+- Expected Output: Working `POST /api/v1/projects` and `GET`/`PATCH /api/v1/projects/{id}` (exact routes are implementation-time detail) against `PHASE-1.1`'s persistence, `PHASE-1.3`'s authorization, and `PHASE-1.4`'s contracts, end-to-end.
+- Acceptance Criteria: (1) an authenticated, authorized user can create a project under a workspace they belong to; (2) a user who is not a member of that workspace cannot — proven negatively; (3) project settings can be read and updated, with changes persisted and auditable (`03` § 110, Audit Important Actions); (4) response shapes match `PHASE-1.4`'s contracts exactly, not an ad hoc shape invented during implementation.
+- Human Approval Required: No.
+- Lifecycle Status: `BACKLOG` (blocked on `PHASE-1.1`, `PHASE-1.3`, `PHASE-1.4`) · Verification Status: `UNVERIFIED` · **Authorization: NOT AUTHORIZED**
+
+**`PHASE-1.6` — Dashboard Shell (Project Overview)**
+- Parent: `PHASE-1` · Dependencies: `PHASE-1.5`, `PHASE-0.6` (`DONE`), `PHASE-1.4` · Complexity: Medium
+- Description: `apps/web/features/dashboard` — ownership already assigned by explicit human decision (Q11, `.ai/OWNERSHIP.md`) — implementing `17` § 10's "Project status" section (research completeness, knowledge completeness, unresolved conflicts, pending reviews, stale datasets, workflow status) against real `PHASE-1.5` project data. `17` § 10's other three sections — Strategic Opportunities, Decision Queue, Research Health — depend on domain data (Topics, Decisions, Evidence, SERPs) that does not exist until `PHASE-2`–`4` (`24` § 94's capability chain). **Observation #7** flags the scope choice below rather than deciding it silently.
+- Purpose: Gives the platform a real landing surface once a project exists; realizes `.ai/COMPONENT_MATRIX.md`'s existing Dashboard registry entry (Project Status Panel, Strategic Opportunities List, Decision Queue Widget, Research Health Panel) in code for the first time.
+- Required Docs: `17` § 10 (Dashboard/Project Overview), § 6 (Workspace and Project Model — current-project identifiability), § 48 (Empty States), § 80.3/80.9 (Anti-Patterns: False certainty; Overloaded dashboards); `.ai/COMPONENT_MATRIX.md` (Dashboard registry entry, its per-component testing requirements); `.ai/OWNERSHIP.md` (Dashboard resolution, Q11); `03` § 8 (AI Must Not Invent Evidence).
+- Expected Output: A dashboard route rendering real Project Status data; the other three panels present in the layout but honestly empty/"not yet available," each labeled with what later phase populates it — this decomposition's proposed default (see Observation #7), not a final decision.
+- Acceptance Criteria: (1) the current workspace/project is always visually identifiable (`17` § 6); (2) the Project Status section reflects real `PHASE-1` data with no fabricated numbers; (3) the three data-dependent panels display no fabricated percentages, counts, or scores (`03` § 8, `17` § 80.3); (4) matches `.ai/COMPONENT_MATRIX.md`'s existing per-component testing requirements for this Feature-tier group.
+- **Human Approval Required: Yes — see Observation #7.** The scope split above (real Project Status now; honest empty states for the rest) is this decomposition's proposed reading, not something `17` § 10 or `24` § 18 state explicitly for a partial, `PHASE-1`-only dashboard. An equally defensible alternative — deferring the entire Dashboard capability out of `PHASE-1` until enough phases exist to populate all four sections meaningfully — should be weighed and confirmed before `PHASE-1.6` specifically is authorized.
+- Lifecycle Status: `BACKLOG` (blocked on `PHASE-1.5`; also gated on Observation #7's resolution before authorization, independent of the technical block) · Verification Status: `UNVERIFIED` · **Authorization: NOT AUTHORIZED**
+
+**`PHASE-1.7` — Basic AI Runtime Foundation**
+- Parent: `PHASE-1` · Dependencies: `PHASE-0.2` (`DONE`), `PHASE-0.7` (`DONE`) · Complexity: Medium
+- Description: `integrations/llm/` scaffold (`20` § 19: `interface.py`, `providers/`, `model_router.py`, `structured_output.py`, `tool_calling.py` stub, `errors.py`, `telemetry.py` — currently just a deferral `README.md`, confirmed by direct inspection) implementing the Agent→AI Runtime Interface→Model Router→Provider Adapter→LLM Provider abstraction (`07` § 41) at the interface level. No agent exists yet to call it (agents are `24` § 94's capability chain, `PHASE-2`+ territory) — built and independently testable this phase, not wired into a live feature.
+- Purpose: Satisfies `24` § 18's "basic AI runtime" capability as infrastructure, without pulling forward `PHASE-2`+ agent work — the same "mechanism, not the model built on top" pattern `PHASE-0.5` used for authentication.
+- Required Docs: `07` §§41–46 (LLM Architecture, Model Router, AI Runtime, Prompt Management, Structured AI Output, Tool Calling); `20` § 19 (LLM Integration Structure); `03` § 29 (LLM Provider Independence); `07` § 111 (Mock Providers).
+- Expected Output: A provider-agnostic interface with at least one adapter implementation (see **Observation #8** — whether that adapter is live or mock-only is an open question); a structured-output validation pipeline skeleton (`07` § 45); token/cost tracking hooked into `PHASE-0.7`'s existing metrics surface.
+- Acceptance Criteria: (1) no agent or domain code calls a provider SDK directly (`07` § 41); (2) the runtime contains no SEO business logic (`07` § 43); (3) prompts used to exercise the pipeline are versioned (`07` § 44), even if placeholder; (4) the structured-output pipeline (Parser→Schema→Semantic→Domain→Persistence, `07` § 45) exists even though nothing calls it end-to-end yet; (5) token/cost is observable through `PHASE-0.7`'s metrics, not a new, parallel observability path.
+- **Human Approval Required: Yes — see Observation #8.** Whether to wire a real, live provider adapter (a new external dependency, a real API key/secret, real cost exposure — `07` § 92 Cost Attribution, § 106 Provider Migration) or to build the interface against a mock/test-only provider only (`07` § 111), deferring any live external LLM call until an actual agent needs one, is a scope-and-cost decision, not a structural one.
+- Lifecycle Status: `READY` (both dependencies genuinely `DONE`) · Verification Status: `UNVERIFIED` · **Authorization: NOT AUTHORIZED**
+
+**`PHASE-1.8` — Context Foundation (Scaffold)**
+- Parent: `PHASE-1` · Dependencies: `PHASE-1.7`, `PHASE-0.1` (`DONE`) · Complexity: Low–Medium
+- Description: `backend/app/context/{assembly,retrieval,ranking,compression,budgeting,policies,state}` (`20` § 15) scaffolded with a minimal Context Package schema (`25` § 8) — the shape of a context payload — without real retrieval logic, since no Entity/Topic/Evidence/SERP data exists yet to retrieve (`24` § 94's chain places Entity Model/EAV/Topic Discovery after `PHASE-1`). Mirrors `PHASE-0.7`'s own discipline ("no AI-specific fields fabricated ahead of an actual AI runtime"), applied here as "no real retrieval logic fabricated ahead of actual knowledge-layer data."
+- Purpose: Satisfies `24` § 18's "context foundation" capability as a structural placeholder, so later phases don't each have to invent context plumbing ad hoc — the same rationale `PHASE-0.8` used for testing scaffolding.
+- Required Docs: `25` §§1–12 (Purpose through Context Retrieval Strategies — read for shape/vocabulary, not implemented in full at this phase), § 8 specifically (Context Package); `20` § 15 (Context Layer).
+- Expected Output: The seven reserved submodules, each with scope/deferral documentation matching the convention already used by `backend/app/domain`, `backend/app/contracts`, and `backend/app/context` itself today; a minimal `ContextPackage`-shaped schema/type, documented, even though nothing populates it with real content yet.
+- Acceptance Criteria: (1) the directory shape matches `20` § 15 exactly; (2) a Context Package schema exists and is documented, even if empty of real content; (3) no retrieval logic is fabricated against data that doesn't exist yet (mirrors `PHASE-0.7`'s AI-specific-fields discipline); (4) the module remains genuinely importable/testable independent of `PHASE-1.7`'s completeness, in case execution order needs to flip.
+- Human Approval Required: No.
+- Lifecycle Status: `BACKLOG` (blocked on `PHASE-1.7`) · Verification Status: `UNVERIFIED` · **Authorization: NOT AUTHORIZED**
+
+---
+
+### Non-Blocking Observations — PHASE-1 decomposition (session 8; continues the numbering from § 4's Obs. #1–#5)
+
+- **Obs. #6 — "user/workspace/project model" and "persistence" merged into `PHASE-1.1`, not split.** `24` § 18 lists these as two separate "potential capabilities." This decomposition reads them as the domain-layer and infrastructure-layer halves of the same underlying capability (`07` § 14's Dependency Direction distinguishes them architecturally, but `20` § 30's own example repository — `project_repository.py` — is literally the entity this subtask introduces), and combines them the same way `PHASE-0.3` combined "database" and "migrations" (session 5 precedent, `.ai/PROJECT_STATE.md` § 4). Disclosed here rather than silently assumed; `PHASE-1.1` itself carries `Human Approval Required: No` since this is a decomposition-granularity choice, not a contested architectural fork — but if the human prefers the two capabilities split into separate subtasks, that should be said before `PHASE-1.1` is authorized.
+- **Obs. #7 — Dashboard partial-scope proposal — see `PHASE-1.6`, `Human Approval Required: Yes`.** Full detail in `PHASE-1.6`'s own block above; summarized here for the single Observations reference point this project's other files link to.
+- **Obs. #8 — AI runtime live-provider-vs-mock-only choice — see `PHASE-1.7`, `Human Approval Required: Yes`.** Full detail in `PHASE-1.7`'s own block above.
+- **Obs. #9 — Resource-level and tool/action-level authorization deferred, not omitted.** `07` § 54 requires authorization at "resource level where necessary" and "tool/action level where necessary" in addition to user/workspace/project level. At `PHASE-1`, there are no resources finer-grained than a `Project` (no Topics/Pages/Decisions yet) and no tools/agents (no `PHASE-1.7` agents exist to grant tool access to — that's `PHASE-2`+). Both are therefore not "necessary" yet, per `07` § 54's own qualifier — the same reasoning `PHASE-0.5` used to defer all of authorization out of its own scope in the first place. Not gated (`Human Approval Required: No` on `PHASE-1.3`), since this is a "not yet applicable" deferral rather than a genuine fork in interpretation — but tracked here so a future phase (`PHASE-2`+, once Topics/Pages/agents exist) doesn't have to rediscover why `backend/app/security/permissions/` was still mostly empty after `PHASE-1`.
+
+## 5. Parallelization / Sequencing Notes
+
+**Within `PHASE-0`:** `.1` has no `PHASE-0`-internal dependency (only the already-`DONE` `BOOTSTRAP-002`) and is the sole `READY` subtask. `.2` depends only on `.1`. `.3` and `.4` can run in parallel once `.1`+`.2` are `DONE` (database and API foundations don't depend on each other). `.5` depends on `.4` (needs the API layer to attach to) and `.2` (needs config/secrets handling) — not on `.3`, since auth-mechanism scaffolding doesn't require a populated database. `.6` depends on `.4` (needs a live endpoint to smoke-test against) in addition to `.1`/`.2`. `.7` depends only on `.1`+`.4` and can proceed in parallel with `.5`/`.6` once those are satisfied. `.8`'s CI-skeleton portion can start as soon as `.1` is `DONE` (formatting/linting need no other subtask); its integration/contract-test portions necessarily trail whichever of `.3`/`.4`/`.6` they target. This ordering is this session's derivation from `20` § 69's conceptual sequence (Repository → Configuration → Persistence → API → Frontend → Observability, adapted since `20` § 69 is written for the full project, not `PHASE-0` specifically) plus `07`'s architectural boundaries — it has not been authorized, and remains subject to revision once a specific subtask is actually authorized and dependency reality (not just planning assumption) can be checked, per the same caution `.ai/WBS.md` already applies to `BOOTSTRAP-002`'s own parallelization notes.
+
+**Session 6 actual execution:** `.1` → `.2` → `.3` → `.4`, strictly sequential (one commit per subtask), even though this section's plan allows `.3`/`.4` to run in parallel — sequential was chosen for traceability, matching the precedent set by `BOOTSTRAP-002.1`–`.3`'s own sequential execution despite no technical requirement to do so. This confirms the dependency chain holds in practice, not just on paper: each subtask's prerequisite was actually `DONE` (not merely planned) before the next began.
+
+**Session 7 actual execution:** `.6` → `.7`, sequential by choice (not technical requirement — this section's plan already notes `.7` can proceed independently of `.6`), one commit per subtask, same traceability rationale as session 6. `.5` was named in the human's authorization command but not executed, pending Observation #1 confirmation (see `.ai/TASK_BOARD.md` notes, Q14) — a case this plan anticipated only in the abstract ("`.5` depends on `.4` and `.2`") but not the Obs. #1 gate specifically, which lives in this section's own § 4 detail, not here. `.8` was likewise named but not executed: its dependency (`.5`–`.7` reaching `DONE`) is now only partially satisfied (`.6`, `.7` done; `.5` still pending), confirming in practice — not just on paper — that `.8` genuinely cannot proceed without `.5`, exactly as this section predicted before either subtask was attempted.
+
+**Within `PHASE-1`** (decomposed session 8; nothing below has been executed — this is a planning-time projection, same caveat § "Within `PHASE-0`" above carried before session 6): two independent tracks exist, since nothing in `PHASE-1.7`/`.8` (AI runtime, context scaffold) depends on anything in `PHASE-1.1`–`.6` (domain/auth/authz/contracts/lifecycle/dashboard) or vice versa — both tracks' dependencies are satisfied entirely by already-`DONE` `PHASE-0` work.
+
+```text
+Track A (platform):  PHASE-1.1 → { PHASE-1.2 → PHASE-1.3 , PHASE-1.4 } → PHASE-1.5 → PHASE-1.6
+Track B (AI):         PHASE-1.7 → PHASE-1.8
+```
+
+- `PHASE-1.1` is the sole entry point for Track A — its only dependencies (`PHASE-0.2`, `PHASE-0.3`) are `DONE` — making it, alongside `PHASE-1.7`, one of `PHASE-1`'s two `READY` subtasks.
+- `PHASE-1.2` and `PHASE-1.4` can both start as soon as `PHASE-1.1` is `DONE` and can run in parallel (authentication-binding doesn't need the contract layer, and the contract layer doesn't need authentication implemented — only the entities `PHASE-1.1` defines).
+- `PHASE-1.3` additionally needs `PHASE-1.2` (authorization checks a real authenticated identity, not just a domain model) — so it cannot start until both `PHASE-1.1` and `PHASE-1.2` are `DONE`, even though `PHASE-1.4` can proceed independently of `PHASE-1.3`.
+- `PHASE-1.5` is Track A's join point: it needs `PHASE-1.1` (persistence), `PHASE-1.3` (authorization), and `PHASE-1.4` (contracts) all `DONE` before it can start — and it is the subtask that actually satisfies `PHASE-1`'s Exit Criteria (see § 4B above).
+- `PHASE-1.6` depends on `PHASE-1.5` (needs a real project to show an overview of) and is the only Track A subtask past the Exit-Criteria join point.
+- Track B is a simple two-step chain: `PHASE-1.7` (runtime) → `PHASE-1.8` (context scaffold, since a context payload is assembled *for* the runtime).
+- Tracks A and B could technically be authorized and executed in either order, or interleaved, once dependency readiness is (not just planned to be) satisfied — this decomposition takes no position on which track a future session should authorize first; that is a human prioritization decision (`24` § 89 Human Planning Authority), not something this planning pass should pre-empt.
+
+**Across Phases:** unchanged from the prior note — within `BOOTSTRAP-002`: 2.2 cannot start before 2.1 resolves the Foundation/Shared boundary — **satisfied**: 2.1 executed first and confirmed the boundary before 2.2 began, and 2.3 executed only after both 2.1 and 2.2 were done, per that session's authorized-but-still-sequential execution (see `.ai/TASK_BOARD.md` notes). 2.6 ran in parallel with 2.5 once 2.4 was done. Across phases, `24_INDEX_ROADMAP_TASKS_DEPENDENCIES.md`'s primary-document lists suggest Phase 1 (Core Platform) and Phase 2 (SEO Knowledge Foundation) do not directly depend on each other once `PHASE-0` is complete — this held up once `PHASE-0` execution was actually authorized and completed (sessions 6–7), and `PHASE-1` itself has now been decomposed (session 8) entirely against already-`DONE` `PHASE-0` work, with no forward reference into `PHASE-2`+. Whether `PHASE-2` (SEO Knowledge Foundation) can start before all of `PHASE-1` is `DONE`, or only after, remains unexamined — that determination is deferred to whichever future session decomposes `PHASE-2`, per the same "decompose one phase at a time" discipline `PHASE-0`→`PHASE-1` itself followed (Q12 → this session).
+
+## 6. Deferred Documentation-Maintenance Task
+
+**`DOCS-MAINT-001`** — Standardize the "Depends On" metadata convention across all 26 documents (pick direct-only or cumulative, not both; add the field to docs currently missing it — `03` by design needs none, but `06` has no declared dependencies at all; correct `13`'s incomplete list to include `09, 10, 11, 12`). Status: `BACKLOG`. No dependencies block it; it was deferred by explicit human choice (Q4), not by a technical blocker.

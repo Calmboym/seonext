@@ -1,0 +1,1 @@
+"""Infrastructure layer: PostgreSQL connections, Redis, queues, object storage, HTTP clients, configuration, secrets, logging, metrics, tracing, task execution. Replaceable where practical; must not leak into domain logic. See docs/07_TECHNICAL_ARCHITECTURE.md §13."""

@@ -1,0 +1,65 @@
+[project]
+name = "seonex-backend"
+version = "0.1.0"
+description = "Seonex — SEO Research & Strategy Copilot / SEO Decision Engine (backend)"
+requires-python = ">=3.11"
+readme = "README.md"
+
+# Baseline stack per docs/07_TECHNICAL_ARCHITECTURE.md §3.
+# NOTE (PHASE-0.1-.4, session 6): these versions have NOT been installed or
+# resolved in the environment this repository was scaffolded in (no network
+# access was available). They are declared as the intended dependency set;
+# a future session with package-install access must run the install and
+# confirm resolution before any runtime-verified status is claimed.
+dependencies = [
+    "fastapi>=0.115,<1.0",
+    "uvicorn[standard]>=0.30,<1.0",
+    "pydantic>=2.7,<3.0",
+    "pydantic-settings>=2.3,<3.0",
+    "sqlalchemy[asyncio]>=2.0,<3.0",
+    "asyncpg>=0.29,<1.0",
+    "alembic>=1.13,<2.0",
+    "prometheus-client>=0.20,<1.0",
+    "pyjwt>=2.7,<3.0",
+    "bcrypt>=4.1,<5.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0,<9.0",
+    "pytest-asyncio>=0.23,<1.0",
+    "httpx>=0.27,<1.0",
+    "ruff>=0.5,<1.0",
+    "mypy>=1.10,<2.0",
+    "bandit>=1.7,<2.0",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["backend/tests"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+# A modest, defensible starting rule set (PHASE-0.8) rather than ruff's
+# full default selection or a maximally strict one — neither could be
+# tuned against real output this session (ruff itself isn't installed;
+# Risk R9). Revisit once a session that can actually run `ruff check`
+# exists to see what these rules actually flag in this codebase.
+select = ["E", "F", "I", "UP", "B"]
+
+[tool.mypy]
+python_version = "3.11"
+# Lenient, not `strict = true` (PHASE-0.8): most of this codebase already
+# has full type hints (see backend/app throughout), but `strict` mode's
+# stricter requirements (e.g. no implicit Optional, no untyped decorators)
+# haven't been checked against a real mypy run this session (Risk R9) —
+# turning on the strictest mode blind risks a wall of first-run failures
+# unrelated to actual bugs. Tighten once a session can iterate against
+# real output.
+ignore_missing_imports = true
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"

@@ -1,0 +1,12 @@
+/* Minimal baseline styles. packages/ui (shared design-system components,
+   docs/20_PROJECT_STRUCTURE.md §27) is empty at PHASE-0.6 by design — no
+   component styles exist yet to import here. */
+
+:root {
+  color-scheme: light dark;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+}

@@ -1,0 +1,1 @@
+"""Backend-side output/response contract definitions, distinct from packages/contracts (shared, cross-app schemas). See docs/16_OUTPUT_CONTRACTS.md. Empty at Phase 0 — no domain contracts defined yet."""

@@ -1,0 +1,1 @@
+"""Knowledge layer: abstracts persistence from intelligence modules (entities, EAV, topics, keywords, intents, SERPs, pages, competitors, evidence, recommendations, decisions, history). See docs/07_TECHNICAL_ARCHITECTURE.md §11. Empty at Phase 0 — no domain schema exists yet."""

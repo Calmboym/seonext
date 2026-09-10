@@ -1,0 +1,1 @@
+"""Application layer: coordinates user-facing use cases (request validation, authorization checks, use-case invocation, transaction boundaries, workflow creation, response mapping). Must not contain large amounts of SEO reasoning. See docs/07_TECHNICAL_ARCHITECTURE.md §7."""

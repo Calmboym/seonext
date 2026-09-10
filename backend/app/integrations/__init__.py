@@ -1,0 +1,1 @@
+"""Integration layer: adapters for LLM/search/SERP/SEO/crawling/analytics providers. Must not leak provider-specific models into the domain. See docs/07_TECHNICAL_ARCHITECTURE.md §12. Empty at Phase 0 — no external provider adapters are in scope yet."""

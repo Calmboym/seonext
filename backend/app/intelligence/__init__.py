@@ -1,0 +1,1 @@
+"""Intelligence layer: AI services, specialized agents, inference pipelines, semantic classification, clustering, reasoning components, model adapters. Must communicate with domain/knowledge layers through defined interfaces. See docs/07_TECHNICAL_ARCHITECTURE.md §9. Empty at Phase 0 — no AI runtime exists yet."""
