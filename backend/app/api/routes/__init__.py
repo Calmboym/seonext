@@ -9,9 +9,11 @@ backend/app/main.py. Adding a new domain router in a later phase means
 
 from fastapi import APIRouter
 
+from .auth import router as auth_router
 from .health import router as health_router
 
 v1_router = APIRouter()
 v1_router.include_router(health_router)
+v1_router.include_router(auth_router)
 
 __all__ = ["v1_router"]
