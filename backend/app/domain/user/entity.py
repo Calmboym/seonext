@@ -94,6 +94,8 @@ class User:
         object.__setattr__(self, "display_name", _require_non_empty(self.display_name, field_name="display_name"))
         if not self.hashed_password:
             raise UserDomainError("hashed_password must not be empty")
+        if not isinstance(self.status, UserStatus):
+            raise UserDomainError(f"invalid status: {self.status!r}")
 
     @classmethod
     def register(cls, *, email: str, hashed_password: str, display_name: str) -> "User":

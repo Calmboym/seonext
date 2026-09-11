@@ -78,6 +78,8 @@ class Workspace:
         if not is_valid_id(self.owner_user_id):
             raise WorkspaceDomainError(f"invalid owner_user_id: {self.owner_user_id!r}")
         object.__setattr__(self, "name", _require_non_empty(self.name, field_name="name"))
+        if not isinstance(self.status, WorkspaceStatus):
+            raise WorkspaceDomainError(f"invalid status: {self.status!r}")
 
     @classmethod
     def create(cls, *, name: str, owner_user_id: str) -> "Workspace":

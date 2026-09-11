@@ -41,6 +41,19 @@ def test_malformed_owner_id_is_rejected() -> None:
         pass
 
 
+def test_constructing_a_workspace_directly_with_an_invalid_status_is_rejected() -> None:
+    try:
+        Workspace(
+            id=new_id(),
+            name="Acme SEO",
+            owner_user_id=_owner_id(),
+            status="not-a-real-status",  # type: ignore[arg-type]
+        )
+        raise AssertionError("expected WorkspaceDomainError")
+    except WorkspaceDomainError:
+        pass
+
+
 def test_rename_returns_a_new_instance_with_the_same_id() -> None:
     workspace = Workspace.create(name="Acme SEO", owner_user_id=_owner_id())
     renamed = workspace.rename("Acme SEO — EU")
@@ -82,6 +95,7 @@ if __name__ == "__main__":
         test_create_produces_a_valid_active_workspace,
         test_empty_name_is_rejected,
         test_malformed_owner_id_is_rejected,
+        test_constructing_a_workspace_directly_with_an_invalid_status_is_rejected,
         test_rename_returns_a_new_instance_with_the_same_id,
         test_archive_then_reactivate_round_trips_status,
         test_archiving_an_already_archived_workspace_raises,

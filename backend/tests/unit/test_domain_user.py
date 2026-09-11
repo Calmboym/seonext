@@ -143,6 +143,20 @@ def test_constructing_a_user_directly_with_a_malformed_id_is_rejected() -> None:
         pass
 
 
+def test_constructing_a_user_directly_with_an_invalid_status_is_rejected() -> None:
+    try:
+        User(
+            id="11111111-1111-1111-1111-111111111111",
+            email="a@b.com",
+            hashed_password="x",
+            display_name="X",
+            status="not-a-real-status",  # type: ignore[arg-type]
+        )
+        raise AssertionError("expected UserDomainError")
+    except UserDomainError:
+        pass
+
+
 if __name__ == "__main__":
     test_functions = [
         test_register_produces_a_valid_active_user_with_a_stable_id,
@@ -158,6 +172,7 @@ if __name__ == "__main__":
         test_rename_updates_display_name_and_leaves_everything_else,
         test_change_password_hash_updates_only_the_hash,
         test_constructing_a_user_directly_with_a_malformed_id_is_rejected,
+        test_constructing_a_user_directly_with_an_invalid_status_is_rejected,
     ]
     for test_function in test_functions:
         test_function()

@@ -41,6 +41,19 @@ def test_malformed_workspace_id_is_rejected() -> None:
         pass
 
 
+def test_constructing_a_project_directly_with_an_invalid_status_is_rejected() -> None:
+    try:
+        Project(
+            id=new_id(),
+            workspace_id=_workspace_id(),
+            name="Acme.com SEO",
+            status="not-a-real-status",  # type: ignore[arg-type]
+        )
+        raise AssertionError("expected ProjectDomainError")
+    except ProjectDomainError:
+        pass
+
+
 def test_list_business_attributes_are_deduplicated_and_order_preserved() -> None:
     project = Project.create(
         workspace_id=_workspace_id(),
@@ -108,6 +121,7 @@ if __name__ == "__main__":
         test_create_produces_a_valid_active_project_with_empty_business_fields_by_default,
         test_empty_name_is_rejected,
         test_malformed_workspace_id_is_rejected,
+        test_constructing_a_project_directly_with_an_invalid_status_is_rejected,
         test_list_business_attributes_are_deduplicated_and_order_preserved,
         test_belongs_to_is_the_tenant_check_repositories_and_authorization_both_rely_on,
         test_update_business_profile_only_changes_the_fields_passed,

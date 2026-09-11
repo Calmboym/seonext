@@ -113,6 +113,8 @@ class Project:
         object.__setattr__(self, "target_audiences", _clean_list(list(self.target_audiences)))
         object.__setattr__(self, "commercial_goals", _clean_list(list(self.commercial_goals)))
         object.__setattr__(self, "strategic_priorities", _clean_list(list(self.strategic_priorities)))
+        if not isinstance(self.status, ProjectStatus):
+            raise ProjectDomainError(f"invalid status: {self.status!r}")
 
     @classmethod
     def create(

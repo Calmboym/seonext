@@ -3,9 +3,16 @@
 containment chain, and enforcement that cross-project data retrieval is
 impossible through normal application pathways.
 
-Reserved for PHASE-1 — there is no Organization/Workspace/Project model
-yet (backend/app/domain/ is empty) and no project-scoped query to enforce
-a boundary on. Populate once that model exists; every project-scoped
-query written from that point on must route through whatever this module
-provides, per §56.
+Populated (`PHASE-1.3`, session 9): `membership.py` — "is user X part of
+workspace Y, and at what role" lookups, consumed by
+`backend.app.security.authorization`. The other half of tenant
+isolation — "a project lookup scoped to the wrong workspace returns
+nothing, structurally" — was already built at the repository level in
+`PHASE-1.1` (`backend.app.infrastructure.repositories.project_repository.
+ProjectRepository`); this module does not duplicate that, it composes
+with it (see `authorization/project.py`).
 """
+
+from .membership import MembershipReader, get_role, is_member
+
+__all__ = ["MembershipReader", "get_role", "is_member"]
