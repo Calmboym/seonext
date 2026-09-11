@@ -5,7 +5,8 @@
   "description": "Seonex — SEO Research & Strategy Copilot / SEO Decision Engine (monorepo root). See docs/20_PROJECT_STRUCTURE.md §3-4.",
   "workspaces": [
     "apps/web",
-    "packages/ui"
+    "packages/ui",
+    "packages/contracts"
   ],
   "scripts": {
     "dev": "npm run dev --workspace=apps/web",
