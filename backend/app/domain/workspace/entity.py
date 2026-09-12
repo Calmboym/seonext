@@ -5,7 +5,7 @@ docs/06_DATA_ARCHITECTURE.md §5 (Organization → Workspace → Project → SEO
 Knowledge) and §6 (Core Identity Model).
 
 Scope simplification (disclosed, not silently assumed — see
-.ai/PROJECT_STATE.md §10, Observation #9 for this session): docs/06 §5's
+.ai/PROJECT_STATE.md §10, Observation #11 for this session): docs/06 §5's
 chain names "Organization" as the level above Workspace, but no document
 in this project's baseline (docs/24_INDEX_ROADMAP_TASKS_DEPENDENCIES.md
 §18's PHASE-1 capability list included) describes Organization as a
